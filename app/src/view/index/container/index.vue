@@ -1,15 +1,41 @@
 <template>
-  <div class="chatContainer"></div>
+  <div class="chatContainer">
+    <UserInfo />
+    <Content />
+    <SendBox />
+  </div>
 </template>
 
 <script>
-export default {};
+import UserInfo from "./userInfo/index";
+import Content from "./content/index";
+import SendBox from "./send/index";
+import { inject, setup, onMounted } from "vue";
+export default {
+  setup() {
+    onMounted(() => {
+     
+    });
+    return {
+      // location,
+      // geolocation,
+    };
+  },
+  components: {
+    UserInfo,
+    Content,
+    SendBox,
+  },
+};
 </script>
 
 <style lang='scss'>
 .chatContainer {
+  position: relative;
   flex: 1;
   height: 100%;
+  padding-bottom: 68px;
+  box-sizing: border-box;
   background-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0 0em 0em rgba(255, 255, 255, 0.2) inset;
   border-top-right-radius: 8px;

@@ -28,53 +28,11 @@ export default {
   setup() {
     let chatArr = reactive([
       {
-        name: "张三",
+        name: "公共",
         id: 1,
         date: new Date(),
         photo: require("@/assets/imgs/user.jpg"),
-      },
-      {
-        name: "李四",
-        id: 2,
-        date: new Date(),
-        photo: require("@/assets/imgs/user1.jpg"),
-      },
-      {
-        name: "王五",
-        id: 3,
-        date: new Date(),
-        photo: require("@/assets/imgs/user2.jpg"),
-      },
-      {
-        name: "赵六",
-        id: 4,
-        date: new Date(),
-        photo: require("@/assets/imgs/user3.jpg"),
-      },
-      {
-        name: "黄七",
-        id: 5,
-        date: new Date(),
-        photo: require("@/assets/imgs/user.jpg"),
-      },
-      {
-        name: "王五",
-        id: 6,
-        date: new Date(),
-        photo: require("@/assets/imgs/user2.jpg"),
-      },
-      {
-        name: "赵六",
-        id: 7,
-        date: new Date(),
-        photo: require("@/assets/imgs/user3.jpg"),
-      },
-      {
-        name: "黄七",
-        id: 8,
-        date: new Date(),
-        photo: require("@/assets/imgs/user.jpg"),
-      },
+      }
     ]);
     let id = ref(1);
     function changeChat(item, index) {
@@ -125,11 +83,12 @@ export default {
   ul {
     display: flex;
     flex-direction: column;
-    min-height: 100%;
-    max-height: 100%;
+    height: 100%;
+    height: 100%;
+    box-sizing: border-box;
     position: relative;
     --top: 0px;
-    overflow: scroll;
+    overflow-y: auto;
     &::after {
       background-color: rgba(255, 255, 255, 0.6);
       content: "";

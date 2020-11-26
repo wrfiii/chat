@@ -3,54 +3,82 @@
     <div class="wraper" id="wraper">
       <Left />
       <Main />
-      <Dialog>1232</Dialog>
+      <Dialog :show="show" custom_class="dialog-from">
+        <div class="title">
+          <ul>
+            <li>登录</li>
+            <li>注册</li>
+          </ul>
+        </div>
+        <div class="ipt">
+          <p>用户名</p>
+          <input type="text" v-model="userFrom.userName" />
+          <p>密码</p>
+          <input type="text" v-model="userFrom.userPwd" />
+        </div>
+        <div class="submit" @click="sbumit">登录</div>
+      </Dialog>
     </div>
   </div>
 </template>
 
 <script>
-import { setup, ref, reactive } from "vue";
-
+import { setup, ref, reactive, onMounted, provide } from "vue";
+import "./index.scss";
 import Left from "./left/index";
-
 import Main from "./container/index";
 import io from "socket.io-client";
-import Dialog from '../../components/dialog/index'
+import Dialog from "../../components/dialog/index";
 
-import axios from "axios";
-
-import "./index.scss";
+import requset from "@/base/axios.js";
+function sbumit() {
+  requset.post("/login", this.userFrom).then((res) => {
+    if (res == "ok") {
+      localStorage.setItem("isLogin", 1);
+      localStorage.setItem("user", JSON.stringify(this.userFrom));
+      this.show = false;
+    }
+  });
+}
 export default {
   name: "App",
   setup() {
-    return {};
+    let userFrom = reactive({
+      userName: "",
+      userPwd: "",
+    });
+    let show =  localStorage.getItem('isLogin')===1 ? ref(true):ref(false);
+    return {
+      userFrom,
+      sbumit,
+      show,
+    };
   },
   components: {
     Left,
     Main,
-    Dialog
+    Dialog,
   },
   mounted() {
-    var options = {
-      rememberUpgrade: true,
-      transports: ["websocket"],
-      secure: true,
-      rejectUnauthorized: false,
-    };
-    var ws = io("http://localhost:3000", options);
-   
-    ws.on("connect", (socket) => {
-      console.log("连接socket成功");
-      ws.send("你好嘛");
-    });
-    ws.on("sb", (data) => {
-      console.log(data + "/n sb");
-    });
-    ws.on("open", (socket) => {});
-    ws.on("close", (socket) => {});
-    ws.on("error", (socket) => {});
-    ws.on("event", () => {});
-    ws.on("message", () => {});
+    // var options = {
+    //   rememberUpgrade: true,
+    //   transports: ["websocket"],
+    //   secure: true,
+    //   rejectUnauthorized: false,
+    // };
+    // var ws = io("http://localhost:3000", options);
+    // ws.on("connect", (socket) => {
+    //   console.log("连接socket成功");
+    //   ws.send("你好嘛");
+    // });
+    // ws.on("sb", (data) => {
+    //   console.log(data + "/n sb");
+    // });
+    // ws.on("open", (socket) => {});
+    // ws.on("close", (socket) => {});
+    // ws.on("error", (socket) => {});
+    // ws.on("event", () => {});
+    // ws.on("message", () => {});
   },
 };
 </script>
@@ -78,6 +106,65 @@ export default {
     background: #ffffff40 border-box;
     display: flex;
     z-index: 10;
+    .dialog-from {
+      display: flex;
+      flex-direction: column;
+      padding: 50px 40px 40px 40px;
+      box-sizing: border-box;
+      .title {
+        padding-bottom: 16px;
+        border-bottom: 1px solid #ccc;
+        ul {
+          display: flex;
+          li {
+            width: 50px;
+            font-size: 24px;
+          }
+        }
+      }
+      .ipt {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column;
+        p {
+          font-size: 12px;
+          color: #444;
+          margin-bottom: 4px;
+        }
+        input {
+          line-height: 48px;
+          text-indent: 12px;
+          border: 1px solid rgba(0, 0, 0, 0.2);
+          border-radius: 6px;
+          transition: border-color 0.3s;
+          &:focus {
+            border-color: blueviolet;
+          }
+          &:nth-of-type(1) {
+            margin-bottom: 18px;
+          }
+        }
+      }
+      .submit {
+        width: 100%;
+        height: 48px;
+        line-height: 48px;
+        text-align: center;
+        color: white;
+        margin-top: 36px;
+        border-radius: 6px;
+        font-size: 22px;
+        user-select: none;
+        cursor: pointer;
+        &:active {
+          background: #dd6161;
+          border-color: #dd6161;
+        }
+        font-weight: 500;
+        border-color: #f56c6c;
+        background: #f56c6c;
+      }
+    }
   }
 }
 </style>

@@ -1,13 +1,13 @@
 <template>
   <transition name="dialog">
     <div
-      class="v-dialog-wraper"
-      v-if="isShowDialog"
+      :class="['v-dialog-wraper']"
+      v-if="show"
       ref="diaLog"
       @click="showLog"
       key="boxxx"
     >
-      <div class="v-dialog-body">
+      <div :class="['v-dialog-body',custom_class ? custom_class : ''] ">
         <slot> </slot>
       </div>
     </div>
@@ -15,17 +15,27 @@
 </template>
 
 <script>
+
+
 import { setup, ref, reactive } from "vue";
 
 export default {
+  props: {
+    show: {
+      defalut: false,
+      type: Boolean,
+    },
+    custom_class: {
+      defalut: null,
+      type: String,
+    },
+  },
   setup() {
-    let isShowDialog = ref(true);
     function showLog() {
       this.isShowDialog = false;
     }
     return {
       showLog,
-      isShowDialog,
     };
   },
   // mounted(){
@@ -44,8 +54,9 @@ export default {
   opacity: 0;
 }
 
-.dialog-leave-active, .dialog-enter-active{ 
-  transition:all 0.4s
+.dialog-leave-active,
+.dialog-enter-active {
+  transition: all 0.4s;
 }
 .v-dialog-wraper {
   position: fixed;
@@ -76,8 +87,8 @@ export default {
   .v-dialog-body {
     position: absolute;
     top: -50%;
-    min-width: 50%;
-    min-height: 50%;
+    width: 480px;
+    min-height: 300px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.8);
