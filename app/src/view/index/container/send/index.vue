@@ -1,14 +1,38 @@
 <template>
   <div class="send-box">
     <div class="send-ipt">
-      <input type="text" />
-      <button>发送</button>
+      <input type="text" v-model="msg" />
+      <button @click="send">发送</button>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { setup, ref, reactive, onMounted, provide, inject } from "vue";
+export default {
+  setup() {
+    let ws = inject("ws");
+    let msgArr = inject("msgArr");
+    let msg = ref("");
+    let userName = JSON.parse(localStorage.getItem("user")).userName;
+    function send() {
+      if(!msg.value){
+        return
+      }
+      ws.send(msg.value);
+      msgArr.push({
+        userName,
+        msg: msg.value,
+        time:new Date()
+      });
+      this.msg = "";
+    }
+    return {
+      send,
+      msg,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>

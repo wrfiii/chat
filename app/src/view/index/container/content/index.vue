@@ -1,21 +1,18 @@
 <template>
   <div class="chat-content">
-    <ul>
+    <ul ref="chat" id="chat">
       <li v-for="(item, index) in chatList" :key="index">
         <div
           class="u-img"
-          :style="{ backgroundImage: 'url(' + item.ava + ')' }"
+          :style="{ backgroundImage: 'url(' + item.ava + ')', scollT }"
         ></div>
         <div class="r-ct">
           <p>
-            <span class="name">{{ item.name }}</span>
+            <span class="name">{{ item.userName }}</span>
             <span class="time">{{ moment().format("HH:mm") }}</span>
           </p>
           <p class="text-box">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deserunt
-            perspiciatis saepe accusantium quod eos esse nesciunt quos, magni
-            libero harum maiores officiis iste consectetur doloribus temporibus
-            facilis dolor eaque sapiente?
+            {{ item.msg }}
           </p>
         </div>
       </li>
@@ -24,19 +21,27 @@
 </template>
 
 <script>
-import { setup, ref, reactive } from "vue";
+import { setup, ref, reactive, inject, watch, onMounted, nextTick } from "vue";
 import moment from "moment";
 export default {
   setup() {
-    let chatList = reactive([
-      {
-        name: "张三",
-        ava: require("@/assets/imgs/user.jpg"),
-      },
-    ]);
+    let chatList = inject("msgArr");
+    // watch(chatList, () => {
+    //   this.$refs.chat.offsetTop = this.$refs.chat.offsetHeight;
+    // });
+    const chat = ref(null);
+    onMounted(() => {
+      watch(chatList, () => {
+        let $chat = document.getElementById("chat");
+        nextTick(() => {
+          $chat.scrollTop = $chat.offsetHeight;
+        });
+      });
+    });
     return {
       chatList,
       moment,
+      chat,
     };
   },
 };
@@ -47,7 +52,33 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
-  padding-bottom: 28px;
+  height: calc(100% - 100px);
+  box-sizing: border-box;
+  overflow-y: auto;
+  padding-bottom: 20px;
+  box-sizing: border-box;
+  transition: all 0.5s;
+  &::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 8px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+  }
+  &::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 8px;
+    background-color: skyblue;
+    background-image: linear-gradient(
+      to right,
+      rgb(242, 112, 156),
+      rgb(255, 148, 114)
+    );
+  }
+  &::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #ededed;
+    border-radius: 8px;
+  }
   li {
     display: flex;
     padding-left: 16px;
@@ -72,9 +103,13 @@ export default {
       .text-box {
         color: white;
         position: relative;
+        min-width: 50%;
+        max-width: 600px;
+        width: max-content;
         font-size: 14px;
         margin-top: 6px;
         background-color: rgba(155, 89, 182, 0.2);
+        box-shadow: 0px 0px px rgba(0, 0, 0, 0.5);
         border-radius: 10px;
         padding: 6px;
         line-height: 1.2;
@@ -83,7 +118,7 @@ export default {
           content: "";
           position: absolute;
           right: 100%;
-          top: 0px;
+          top: -6px;
           width: 16px;
           height: 16px;
           border-width: 0;

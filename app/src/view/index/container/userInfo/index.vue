@@ -32,7 +32,7 @@ export default {
 
 <style lang='scss'>
 .title {
-  height: 16%;
+  height: 100px;
   display: flex;
   align-items: center;
   font-size: 16px;

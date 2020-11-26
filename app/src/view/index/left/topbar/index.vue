@@ -15,6 +15,6 @@ export default {
 .topbar {
   /* background-color: red; */
   color: red;
-  height: 16%;
+  height: 100px;
 }
 </style>

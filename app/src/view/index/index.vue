@@ -27,10 +27,13 @@ import { setup, ref, reactive, onMounted, provide } from "vue";
 import "./index.scss";
 import Left from "./left/index";
 import Main from "./container/index";
-import io from "socket.io-client";
 import Dialog from "../../components/dialog/index";
-
 import requset from "@/base/axios.js";
+import Ws from "@/base/ws.ts";
+
+function createWs() {
+  return new Ws();
+}
 function sbumit() {
   requset.post("/login", this.userFrom).then((res) => {
     if (res == "ok") {
@@ -40,45 +43,29 @@ function sbumit() {
     }
   });
 }
+
 export default {
-  name: "App",
   setup() {
     let userFrom = reactive({
       userName: "",
       userPwd: "",
     });
-    let show =  localStorage.getItem('isLogin')===1 ? ref(true):ref(false);
+    let msgArr = provide("msgArr",reactive([]));
+    let show = localStorage.getItem("isLogin") === "1" ? ref(false) : ref(true);
+    let Ws = reactive(createWs());
+    provide("ws", Ws);
     return {
       userFrom,
       sbumit,
       show,
+      Ws,
+      msgArr,
     };
   },
   components: {
     Left,
     Main,
     Dialog,
-  },
-  mounted() {
-    // var options = {
-    //   rememberUpgrade: true,
-    //   transports: ["websocket"],
-    //   secure: true,
-    //   rejectUnauthorized: false,
-    // };
-    // var ws = io("http://localhost:3000", options);
-    // ws.on("connect", (socket) => {
-    //   console.log("连接socket成功");
-    //   ws.send("你好嘛");
-    // });
-    // ws.on("sb", (data) => {
-    //   console.log(data + "/n sb");
-    // });
-    // ws.on("open", (socket) => {});
-    // ws.on("close", (socket) => {});
-    // ws.on("error", (socket) => {});
-    // ws.on("event", () => {});
-    // ws.on("message", () => {});
   },
 };
 </script>

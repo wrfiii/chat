@@ -1,12 +1,22 @@
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 module.exports = {
-    configureWebpack:{
+    configureWebpack: {
         plugins: [
             new MomentLocalesPlugin({
-                localesToKeep: ['zh-cn','en']
+                localesToKeep: ['zh-cn', 'en']
             }),
-        ],
+        ], 
+        module: {
+            rules: [
+                {
+                    test: /\.tsx?$/, loader: 'ts-loader', exclude: /node_modules/, options: {
+                        appendTsSuffixTo: [/\.vue$/],
+                    }
+                }
+            ]
+        },
     },
+
     devServer: {
         open: true,
         host: 'localhost',
