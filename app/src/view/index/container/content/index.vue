@@ -4,7 +4,7 @@
       <li v-for="(item, index) in chatList" :key="index">
         <div
           class="u-img"
-          :style="{ backgroundImage: 'url(' + item.ava + ')', scollT }"
+          :style="{ backgroundImage: 'url(' + item.ava + ')' }"
         ></div>
         <div class="r-ct">
           <p>
@@ -26,22 +26,9 @@ import moment from "moment";
 export default {
   setup() {
     let chatList = inject("msgArr");
-    // watch(chatList, () => {
-    //   this.$refs.chat.offsetTop = this.$refs.chat.offsetHeight;
-    // });
-    const chat = ref(null);
-    onMounted(() => {
-      watch(chatList, () => {
-        let $chat = document.getElementById("chat");
-        nextTick(() => {
-          $chat.scrollTop = $chat.offsetHeight;
-        });
-      });
-    });
     return {
       chatList,
-      moment,
-      chat,
+      moment
     };
   },
 };
@@ -54,6 +41,7 @@ export default {
   position: relative;
   height: calc(100% - 100px);
   box-sizing: border-box;
+  width: 100%;
   overflow-y: auto;
   padding-bottom: 20px;
   box-sizing: border-box;
@@ -103,17 +91,18 @@ export default {
       .text-box {
         color: white;
         position: relative;
-        min-width: 50%;
-        max-width: 600px;
-        width: max-content;
+        min-width: 500px;
+        max-width: 80%;
         font-size: 14px;
         margin-top: 6px;
         background-color: rgba(155, 89, 182, 0.2);
         box-shadow: 0px 0px px rgba(0, 0, 0, 0.5);
         border-radius: 10px;
         padding: 6px;
-        line-height: 1.2;
+        padding-left: 10px;
+        line-height: 1.4;
         margin-right: 20px;
+        word-break: break-word;
         &::after {
           content: "";
           position: absolute;

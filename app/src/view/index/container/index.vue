@@ -32,9 +32,9 @@ export default {
 <style lang='scss'>
 .chatContainer {
   position: relative;
-  flex: 1;
   height: 100%;
-  padding-bottom: 68px;
+  width: calc(100% - 20%);
+  padding-bottom:  68px;
   box-sizing: border-box;
   background-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0 0em 0em rgba(255, 255, 255, 0.2) inset;
