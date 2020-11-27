@@ -25,11 +25,21 @@ io.on('connection', (socket) => { /* … */
         console.log('新的事件', data);
     });
     socket.on('disconnect', data => { /* … */
-        console.log('断开连接', data)
+        console.log(socket.userName);
+        socket.broadcast.emit('disconnectUser',
+            socket.userName
+        );
     });
     socket.on('message', data => { /* … */
-        console.log('新的消息', data);
+        socket.broadcast.emit('msg', {
+            data
+        });
     });
+
+    socket.on('newUser', data => {
+        socket.broadcast.emit('newUser', data);
+        socket.userName = data;
+    })
 });
 server.on('*', () => {
     console.log(123);
@@ -37,6 +47,7 @@ server.on('*', () => {
 
 app.post('/login', function (req, res) {
     roomUsers.push(req.body)
+    console.log(req.body);
     res.send('ok')
 });
 

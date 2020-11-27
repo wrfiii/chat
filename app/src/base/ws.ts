@@ -6,54 +6,19 @@ var options = {
     rejectUnauthorized: false,
 };
 
-
 class ws {
     ws: any
     constructor() {
         this.ws = io('http://localhost:3000', options)
-        this.ws.on("connect", (socket) => {
-            this.connect(socket)
-        });
-        this.ws.on('open', socket => {
-            this.open(socket)
-        })
-        this.ws.on('close', socket => {
-            this.close(socket)
-        })
-        this.ws.on('error', socket => {
-            this.error(socket)
-        })
-        this.ws.on('event', socket => {
-            this.event(socket)
-        })
-        this.ws.on('message', socket => {
-            this.event(socket)
-        })
-
     }
-    connect(socket) {
-        console.log('连接成功');
-    }
-
-    open(socket) {
-
-    }
-
-    close(socket) {
-
-    }
-
-    error(socket) {
-
-    }
-    event(socket) {
-
-    }
-    message(socket) {
-
-    }
-    send(msg) {
+    send(msg){
         this.ws.send(msg)
+    }
+    on(e,cb){
+           this.ws.on(e,cb) 
+    }
+    emit(e,data){
+        this.ws.emit(e,data)
     }
 }
 export default ws

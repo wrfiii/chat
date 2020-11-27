@@ -1,13 +1,13 @@
 <template>
   <div class="send-box">
     <div class="send-ipt">
-      <input type="text" v-model="msg" @keyup.enter='send' ref="msgBtn" />
-      <button @click="send" >发送</button>
+      <input type="text" v-model="msg" @keyup.enter="send" ref="msgBtn" />
+      <button @click="send">发送</button>
     </div>
   </div>
 </template>
 
-<script>
+<script >
 import { setup, ref, reactive, onMounted, provide, inject } from "vue";
 export default {
   setup() {
@@ -15,18 +15,27 @@ export default {
     let msgArr = inject("msgArr");
     let msg = ref("");
     let msgBtn = ref(null);
-    let userName = JSON.parse(localStorage.getItem("user")).userName;
+    let userFrom = inject("userFrom");
     function send() {
       if (!msg.value) {
         return;
       }
-      ws.send(msg.value);
-      msgBtn.value.focus();
-      msgArr.push({
-        userName,
+      let time = new Date();
+      ws.send({
+        user: userFrom,
         msg: msg.value,
-        time: new Date(),
+        time: time,
+        msgType:1
       });
+      msgArr.push({
+        msgType:1,
+        msg: msg.value,
+        imgSrc: userFrom.imgSrc,
+        userName: userFrom.userName,
+        time: time,
+        isMyMsg:true
+      });
+      msgBtn.value.focus();
       this.msg = "";
     }
     return {

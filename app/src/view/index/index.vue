@@ -2,12 +2,21 @@
   <div class="container">
     <div class="wraper" id="wraper">
       <Left />
-      <Main />
-      <Dialog :show="show" custom_class="dialog-from">
+     <Main />
+      <Dialog :show="!isLogin" custom_class="dialog-from">
         <div class="title">
           <ul>
             <li>登录</li>
             <li>注册</li>
+            <div class="chek-img">
+              <div
+                @click="chekImg(item.imgId, item.imgSrc)"
+                :class="['img', userFrom.imgId === item.imgId ? 'active' : '']"
+                v-for="item in imgArr"
+                :key="item.id"
+                :style="{ backgroundImage: 'url(' + item.imgSrc + ')' }"
+              ></div>
+            </div>
           </ul>
         </div>
         <div class="ipt">
@@ -37,34 +46,70 @@ function createWs() {
 function sbumit() {
   requset.post("/login", this.userFrom).then((res) => {
     if (res == "ok") {
-      localStorage.setItem("isLogin", 1);
-      localStorage.setItem("user", JSON.stringify(this.userFrom));
-      this.show = false;
+      this.isLogin = true;
+      this.msgArr.push({
+        msgType: 2,
+        data: this.userFrom.userName,
+      });
+      this.Ws.emit("newUser", {
+        msgType: 2,
+        data: this.userFrom.userName,
+      });8
     }
   });
 }
+function chekImg(id, imgSrc) {
+  this.userFrom.imgId = id;
+  this.userFrom.imgSrc = imgSrc;
+}
+let userFrom = reactive({
+  userName: "",
+  userPwd: "",
+  imgId: 0,
+  imgSrc: require("@/assets/imgs/user.jpg"),
+});
+let imgArr = [
+  {
+    imgId: 0,
+    imgSrc: require("@/assets/imgs/user.jpg"),
+  },
+  {
+    imgId: 1,
+    imgSrc: require("@/assets/imgs/user1.jpg"),
+  },
+  {
+    imgId: 2,
+    imgSrc: require("@/assets/imgs/user2.jpg"),
+  },
+  {
+    imgId: 3,
+    imgSrc: require("@/assets/imgs/user3.jpg"),
+  },
+];
 
 export default {
   setup() {
-    let userFrom = reactive({
-      userName: "",
-      userPwd: "",
-    });
-    let msgArr = provide("msgArr",reactive([]));
-    let show = localStorage.getItem("isLogin") === "1" ? ref(false) : ref(true);
+    let msgArr = reactive([]);
+    provide("msgArr", msgArr);
+    provide("userFrom", userFrom);
+    let isLogin = ref(false);
+    provide("isLogin", isLogin);
+    provide("imgArr", imgArr);
     let Ws = reactive(createWs());
     provide("ws", Ws);
     return {
-      userFrom,
       sbumit,
-      show,
       Ws,
+      userFrom,
+      isLogin,
+      imgArr,
+      chekImg,
       msgArr,
     };
   },
   components: {
     Left,
-    Main,
+    // Main,
     Dialog,
   },
 };
@@ -101,6 +146,24 @@ export default {
       .title {
         padding-bottom: 16px;
         border-bottom: 1px solid #ccc;
+        .chek-img {
+          display: flex;
+          .img {
+            width: 36px;
+            height: 36px;
+            background-size: cover;
+            border-radius: 50%;
+            margin-right: 16px;
+            cursor: pointer;
+            &:nth-of-type(1) {
+              margin-left: 12px;
+            }
+          }
+          .img.active {
+            border: 1px solid red;
+            filter: drop-shadow(0px, 0px, 2px, rgba(0, 0, 0, 0.2));
+          }
+        }
         ul {
           display: flex;
           li {

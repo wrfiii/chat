@@ -1,30 +1,38 @@
 <template>
   <div class="title">
     <div>公共(1)</div>
-    <div class="u-info" v-if="isLogin">
-      {{ userName }}
+    <div class="u-info">
+      <div
+        class="u-img"
+        :style="{ backgroundImage:isLogin?'url(' + userFrom.imgSrc + ')':'' }"
+      ></div>
+      <div class="u-name">
+        {{ isLogin ? userFrom.userName : "" }}
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { setup, ref, reactive, onMounted, provide, computed } from "vue";
+import {
+  setup,
+  ref,
+  reactive,
+  onMounted,
+  provide,
+  computed,
+  inject,
+  watch,
+} from "vue";
 
 export default {
   setup() {
-    let isLogin = computed(() => {
-      return localStorage.getItem("isLogin");
-    });
-    let userName = computed(() => {
-      try {
-        return JSON.parse(localStorage.getItem("user")).userName;
-      } catch {
-        return null;
-      }
-    });
+    let userFrom = inject("userFrom");
+    let isLogin = inject("isLogin");
+
     return {
+      userFrom,
       isLogin,
-      userName,
     };
   },
 };
@@ -42,8 +50,20 @@ export default {
   display: flex;
   justify-content: space-between;
   padding-right: 20px;
-  .u-info{
-    color: blueviolet;
+  .u-info {
+    display: flex;
+    align-items: center;
+    .u-img {
+      width: 28px;
+      height: 28px;
+      background-size: cover;
+      border-radius: 50%;
+    }
+    .u-name {
+      font-size: 16px;
+      margin-left: 8px;
+      color: #f56c6c;
+    }
   }
 }
 </style>

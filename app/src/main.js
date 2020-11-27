@@ -3,6 +3,5 @@ import router from './router/index';
 import App from './App.vue'
 import 'rest-css';
 import './assets/css/index.css'
-// import IconSvg from './icons/index'
-
 createApp(App).use(router).mount('#app')
+// import IconSvg from './icons/index'
