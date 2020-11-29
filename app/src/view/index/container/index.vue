@@ -12,15 +12,15 @@ import Content from "./content/index";
 import SendBox from "./send/index";
 import { inject, setup, onMounted } from "vue";
 export default {
-  setup() {
-    onMounted(() => {
+  // setup() {
+  //   onMounted(() => {
      
-    });
-    return {
-      // location,
-      // geolocation,
-    };
-  },
+  //   });
+  //   return {
+  //     // location,
+  //     // geolocation,
+  //   };
+  // },
   components: {
     UserInfo,
     Content,

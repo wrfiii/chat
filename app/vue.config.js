@@ -19,7 +19,7 @@ module.exports = {
 
     devServer: {
         open: true,
-        host: '192.168.1.120',
+        host: 'localhost',
         https: false, 
         port: 8080,
         //以上的ip和端口是我们本机的;下面为需要跨域的

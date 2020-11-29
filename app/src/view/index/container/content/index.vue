@@ -1,54 +1,48 @@
 <template>
-  <div class="chat-content">
-    <ul ref="chat" id="chat">
-      <li v-for="(item, index) in msgArr" :key="index">
-        <div v-if="item.msgType === 1">
-          <div v-if="!item.isMyMsg" class="o-Msg">
-            <div
-              class="u-img"
-              :style="{ backgroundImage: 'url(' + item.imgSrc + ')' }"
-            ></div>
-            <div class="r-ct">
-              <p>
-                <span class="name">{{ item.userName }}</span>
-                <span class="time">{{
-                  moment(item.time).format("HH:mm")
-                }}</span>
-              </p>
-              <p class="text-box">
-                {{ item.msg }}
-              </p>
-            </div>
-          </div>
-          <div v-else class="myMsg">
-            <div class="r-ct">
-              <p>
-                <span class="name">{{ item.userName }}</span>
-                <span class="time">{{
-                  moment(item.time).format("HH:mm")
-                }}</span>
-              </p>
-              <p class="text-box">
-                {{ item.msg }}
-              </p>
-            </div>
-            <div
-              class="u-img"
-              :style="{ backgroundImage: 'url(' + item.imgSrc + ')' }"
-            ></div>
+  <ul id="chat" ref="chat">
+    <li v-for="(item, index) in msgArr" :key="index">
+      <div v-if="item.msgType === 1">
+        <div v-if="!item.isMyMsg" class="o-Msg">
+          <div
+            class="u-img"
+            :style="{ backgroundImage: 'url(' + item.imgSrc + ')' }"
+          ></div>
+          <div class="r-ct">
+            <p class="u-name">
+              <span class="name">{{ item.userName }}</span>
+              <span class="time">{{ moment(item.time).format("HH:mm") }}</span>
+            </p>
+            <p class="u-text">
+              {{ item.msg }}
+            </p>
           </div>
         </div>
-        <div v-else-if="item.msgType === 2" class="init">
-          <label for="">{{ item.data }}</label>
-          <span>加入了房间</span>
+        <div v-else class="myMsg">
+          <div class="r-ct">
+            <p class="u-name">
+              <span class="name">{{ item.userName }}</span>
+              <span class="time">{{ moment(item.time).format("HH:mm") }}</span>
+            </p>
+            <p class="u-text">
+              {{ item.msg }}
+            </p>
+          </div>
+          <div
+            class="u-img"
+            :style="{ backgroundImage: 'url(' + item.imgSrc + ')' }"
+          ></div>
         </div>
-        <div v-else-if="item.msgType === 3" class="init">
-          <label for="">{{ item.data }}</label>
-          <span>离开了房间</span>
-        </div>
-      </li>
-    </ul>
-  </div>
+      </div>
+      <div v-else-if="item.msgType === 2" class="init">
+        <label for="">{{ item.data }}</label>
+        <span>加入了房间</span>
+      </div>
+      <div v-else-if="item.msgType === 3" class="init">
+        <label for="">{{ item.data }}</label>
+        <span>离开了房间</span>
+      </div>
+    </li>
+  </ul>
 </template>
 
 <script>
@@ -57,7 +51,6 @@ import moment from "moment";
 
 export default {
   setup() {
-  
     let msgArr = inject("msgArr");
     let ws = inject("ws");
     ws.on("msg", (data) => {
@@ -70,6 +63,13 @@ export default {
         isMyMsg: false,
       });
     });
+    const chat = ref(null);
+    watch(msgArr, () => {
+      nextTick(() => {
+        let $ul = chat.value;
+        $ul.scrollTop = msgArr.length * 60;
+      });
+    });
     ws.on("disconnectUser", (data) => {
       msgArr.push(data);
     });
@@ -80,23 +80,25 @@ export default {
     return {
       msgArr,
       moment,
+      chat,
     };
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.chat-content {
+#chat {
   display: flex;
   flex-direction: column;
   position: relative;
   height: calc(100% - 100px);
   box-sizing: border-box;
   width: 100%;
-  overflow-y: auto;
+  overflow-y: sc;
   padding-bottom: 20px;
   box-sizing: border-box;
   transition: all 0.5s;
+  overflow-y: scroll;
   &::-webkit-scrollbar {
     /*滚动条整体样式*/
     width: 8px; /*高宽分别对应横竖滚动条的尺寸*/
@@ -120,8 +122,8 @@ export default {
   }
 
   li {
-    margin-bottom: 12px;
-
+    padding-bottom: 12px;
+    height: 60px;
     .init {
       display: flex;
       justify-content: center;
@@ -136,7 +138,6 @@ export default {
         color: #909399;
       }
     }
-
     .o-Msg,
     .myMsg {
       display: flex;
@@ -160,7 +161,7 @@ export default {
           font-size: 13px;
           color: #606266;
         }
-        .text-box {
+        .u-text {
           color: white;
           position: relative;
           min-width: 500px;
@@ -204,8 +205,13 @@ export default {
       padding-right: 16px;
       justify-content: flex-end;
       .r-ct {
+        .u-name {
+          display: flex;
+          justify-content: flex-end;
+          padding-right: 20px;
+        }
         flex: 0;
-        .text-box {
+        .u-text {
           margin: 0;
           margin-right: 20px;
           &::after {

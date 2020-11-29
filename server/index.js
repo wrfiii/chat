@@ -1,8 +1,31 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-// var api = require('./src/api.js');
+const mysql      = require('mysql');
 let roomUsers = [];
+
+var connection = mysql.createConnection({
+    host     : 'localhost',
+    user     : 'root',
+    port: 3306,
+    password : 'root',
+    database : 'user'
+  });
+  const sql = `INSERT INTO user(user_account)`
+
+  connection.connect((err=>{
+      if(err){
+          throw new Error(err)
+      }
+    //   connection.query(sql,(err=>{
+    //       if(err){
+    //           console.log(err);
+    //           return
+    //       }
+    //       console.log('插入成功');
+    //   }))
+      console.log('连接成功');
+  }));
 
 app.all("*", function (req, res, next) {
     //设置允许跨域的域名，*代表允许任意域名跨域
